@@ -95,6 +95,8 @@ With a default:
 - mode: full or standalone, full by default. See Modes above.
 - database_subnet_ids: in full mode, subnets in two zones for the database. Needed
   in full mode, and not allowed in standalone mode.
+- setup_name: a name for this setup, such as your company or team name, sent with the usage count.
+  Empty by default, which sends no name.
 - image: flowrensic/temporal-flowrensic in full mode and flowrensic/temporal-flowrensic-standalone in
   standalone mode.
 - server_subnet_ids: private subnets for the server, empty by default. See

@@ -263,3 +263,20 @@ variable "enable_execute_command" {
   type        = bool
   default     = false
 }
+
+variable "usage_count" {
+  description = "Send the anonymous usage count of this setup to Flowrensic once a day: a random setup id, the version, the number of envs and of workers, and which options are on. Never workflow data, names or namespaces. Set false to turn it off."
+  type        = bool
+  default     = true
+}
+
+variable "setup_name" {
+  description = "A name for this setup, such as the company or team name, sent with the usage count. 1 to 64 letters, digits, spaces or . _ -, with no space at either end. Empty sends no name."
+  type        = string
+  default     = ""
+
+  validation {
+    condition     = var.setup_name == "" || can(regex("^[A-Za-z0-9._-]([A-Za-z0-9 ._-]{0,62}[A-Za-z0-9._-])?$", var.setup_name))
+    error_message = "setup_name is empty, or 1 to 64 letters, digits, spaces or . _ -, with no space at either end."
+  }
+}
