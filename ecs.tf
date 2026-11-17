@@ -44,11 +44,15 @@ resource "aws_ecs_task_definition" "server" {
       { name = "FLOWRENSIC_DATABASE_CALL_POOL_SIZE", value = tostring(var.database_call_pool_size) },
       { name = "FLOWRENSIC_USAGE_COUNT", value = tostring(var.usage_count) },
       { name = "FLOWRENSIC_SETUP_NAME", value = var.setup_name },
+      { name = "FLOWRENSIC_ALERT_NOTIFICATIONS", value = tostring(var.alert_notifications) },
+      { name = "FLOWRENSIC_ALERT_RETRY_INTERVAL", value = var.alert_retry_interval },
+      { name = "FLOWRENSIC_ALERT_SEND_INTERVAL", value = var.alert_send_interval },
     ])
     secrets = concat(
       [{ name = "FLOWRENSIC_KNOWN_ENVS", valueFrom = local.envs_parameter_arn }],
       [for db in aws_db_instance.this : { name = "PGPASSWORD", valueFrom = "${db.master_user_secret[0].secret_arn}:password::" }],
       [for variable, arn in local.secret_parameter_arns : { name = variable, valueFrom = arn }],
+      [for variable, arn in local.alert_parameter_arns : { name = variable, valueFrom = arn }],
     )
     logConfiguration = {
       logDriver = "awslogs"

@@ -126,6 +126,14 @@ With a default:
   a Temporal Cloud key that the env list reads through temporalReadApiKeyVariable, or a
   key that can write, read through temporalWriteApiKeyVariable, which the Remediate
   button needs.
+- alert_notifications: true sends each alert to Slack or a webhook when it fires and
+  when it is resolved, false by default. It needs a license key that allows alerts.
+- alert_slack_url_parameter and alert_webhook_url_parameter: the SSM SecureString
+  parameters that hold the Slack incoming webhook url and the webhook url, empty by
+  default. alert_notifications needs at least one. The urls stay in SSM, never in the
+  state.
+- alert_retry_interval and alert_send_interval: the wait after the first failed send,
+  30s by default, and how often the server looks for alerts to send, 5s by default.
 - monitoring: ecs, grafana_cloud or none, ecs by default. See Monitoring below.
 - grafana_admin_password_parameter: with ecs, the SSM parameter that holds the
   password of the Grafana user admin. Needed with ecs.

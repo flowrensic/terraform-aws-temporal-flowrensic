@@ -14,6 +14,15 @@ locals {
     for variable, parameter in var.secret_parameters :
     variable => "arn:${local.partition}:ssm:${var.region}:${local.account}:parameter/${trimprefix(parameter, "/")}"
   }
+  # The alert urls are secrets: the server reads each from its SSM parameter.
+  alert_parameter_arns = {
+    for variable, parameter in {
+      FLOWRENSIC_ALERT_SLACK_URL   = var.alert_slack_url_parameter
+      FLOWRENSIC_ALERT_WEBHOOK_URL = var.alert_webhook_url_parameter
+    } :
+    variable => "arn:${local.partition}:ssm:${var.region}:${local.account}:parameter/${trimprefix(parameter, "/")}"
+    if parameter != ""
+  }
 
   # Which load balancers are the module's own and which are the user's.
   ui_public      = length(var.allowed_cidrs) > 0 ? 1 : 0

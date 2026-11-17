@@ -280,3 +280,48 @@ variable "setup_name" {
     error_message = "setup_name is empty, or 1 to 64 letters, digits, spaces or . _ -, with no space at either end."
   }
 }
+
+variable "alert_notifications" {
+  description = "Send each alert to Slack or a webhook when it fires and when it is resolved. It needs a license key that allows alerts, and alert_slack_url_parameter or alert_webhook_url_parameter. Off by default."
+  type        = bool
+  default     = false
+
+  validation {
+    condition     = !var.alert_notifications || var.alert_slack_url_parameter != "" || var.alert_webhook_url_parameter != ""
+    error_message = "alert_notifications needs alert_slack_url_parameter or alert_webhook_url_parameter, the SSM parameter that holds the url."
+  }
+}
+
+variable "alert_slack_url_parameter" {
+  description = "The SSM SecureString parameter that holds the Slack incoming webhook url the alerts go to. Empty sends nothing to Slack."
+  type        = string
+  default     = ""
+}
+
+variable "alert_webhook_url_parameter" {
+  description = "The SSM SecureString parameter that holds a url each alert is posted to as JSON. Empty sends to no webhook."
+  type        = string
+  default     = ""
+}
+
+variable "alert_retry_interval" {
+  description = "How long the server waits after the first failed send of an alert before it tries again; each next wait is twice as long, at most an hour. A Go duration, 30s by default."
+  type        = string
+  default     = "30s"
+
+  validation {
+    condition     = can(regex("^([0-9]+(\\.[0-9]+)?(ns|us|ms|s|m|h))+$", var.alert_retry_interval))
+    error_message = "alert_retry_interval is a Go duration, such as 30s or 1m."
+  }
+}
+
+variable "alert_send_interval" {
+  description = "How often the server looks for alerts to send, on each channel. A Go duration, 5s by default."
+  type        = string
+  default     = "5s"
+
+  validation {
+    condition     = can(regex("^([0-9]+(\\.[0-9]+)?(ns|us|ms|s|m|h))+$", var.alert_send_interval))
+    error_message = "alert_send_interval is a Go duration, such as 5s or 1m."
+  }
+}
