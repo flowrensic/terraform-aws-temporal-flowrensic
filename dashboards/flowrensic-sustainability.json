@@ -1397,7 +1397,7 @@
                       "group": "",
                       "version": "v0",
                       "spec": {
-                        "expr": "sum by (instance, class) (increase(flowrensic_findings_detected_total{analyzer=~\"job_behind|job_late|over_limit|job_backlog_growing\"}[$__rate_interval]))",
+                        "expr": "sum by (instance, class) (increase(flowrensic_findings_detected_total{analyzer=~\"job_behind_by_flowrensic_sustainer|job_late_by_flowrensic_sustainer|over_limit_by_flowrensic_sustainer|job_backlog_growing_by_flowrensic_sustainer\"}[$__rate_interval]))",
                         "legendFormat": "{{instance}} {{class}}"
                       }
                     },

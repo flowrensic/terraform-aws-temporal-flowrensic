@@ -54,7 +54,7 @@
             "spec": {
               "options": {
                 "mode": "markdown",
-                "content": "## history_growth\nFlags a run whose history grows past the number set."
+                "content": "## history_too_long_by_wf_history, history_storage_too_large_by_wf_history and individual_payload_too_large_by_wf_history\nhistory_too_long_by_wf_history flags a run whose history passed the number of events set, history_storage_too_large_by_wf_history one whose history passed the number of bytes set, individual_payload_too_large_by_wf_history one with a payload past the number of bytes set."
               },
               "fieldConfig": {
                 "defaults": {},
@@ -68,8 +68,8 @@
         "kind": "Panel",
         "spec": {
           "id": 2,
-          "title": "history_growth analysis runs per second",
-          "description": "How many times per second the analyzer history_growth ran, whatever the result. It runs when a run comes in or changes, so it follows the work of your Temporal system. There is no good or bad value of its own; 0 while your system works means no runs come in. No data only when Prometheus gets no metrics from the server; it shows 0 from the start.",
+          "title": "history_too_long_by_wf_history, history_storage_too_large_by_wf_history and individual_payload_too_large_by_wf_history analysis runs per second",
+          "description": "How many times per second the analyzers history_too_long_by_wf_history, history_storage_too_large_by_wf_history and individual_payload_too_large_by_wf_history ran, whatever the result. It runs when a run comes in or changes, so it follows the work of your Temporal system. There is no good or bad value of its own; 0 while your system works means no runs come in. No data only when Prometheus gets no metrics from the server; it shows 0 from the start.",
           "links": [],
           "data": {
             "kind": "QueryGroup",
@@ -83,7 +83,7 @@
                       "group": "",
                       "version": "v0",
                       "spec": {
-                        "expr": "sum(rate(flowrensic_analyzer_runs_total{analyzer=\"history_growth\"}[$__rate_interval]))",
+                        "expr": "sum(rate(flowrensic_analyzer_runs_total{analyzer=~\"history_too_long_by_wf_history|history_storage_too_large_by_wf_history|individual_payload_too_large_by_wf_history\"}[$__rate_interval]))",
                         "legendFormat": "runs"
                       }
                     },
@@ -116,8 +116,8 @@
         "kind": "Panel",
         "spec": {
           "id": 3,
-          "title": "history_growth analysis runs duration p50, p95, p99",
-          "description": "Three lines, p50, p95 and p99: the time in seconds in which half, 95% and 99% of the runs of the analyzer history_growth ended, over the last few minutes. Normal: well under a second. Bad: a line that climbs; large histories take longer, and a slow analyzer slows the intake of runs. No data when the analyzer did not run in that time.",
+          "title": "history_too_long_by_wf_history, history_storage_too_large_by_wf_history and individual_payload_too_large_by_wf_history analysis runs duration p50, p95, p99",
+          "description": "Three lines, p50, p95 and p99: the time in seconds in which half, 95% and 99% of the runs of the analyzers history_too_long_by_wf_history, history_storage_too_large_by_wf_history and individual_payload_too_large_by_wf_history ended, over the last few minutes. Normal: well under a second. Bad: a line that climbs; large histories take longer, and a slow analyzer slows the intake of runs. No data when the analyzer did not run in that time.",
           "links": [],
           "data": {
             "kind": "QueryGroup",
@@ -131,7 +131,7 @@
                       "group": "",
                       "version": "v0",
                       "spec": {
-                        "expr": "histogram_quantile(0.5, sum by (le) (rate(flowrensic_analyzer_run_duration_seconds_bucket{analyzer=\"history_growth\"}[$__rate_interval])))",
+                        "expr": "histogram_quantile(0.5, sum by (le) (rate(flowrensic_analyzer_run_duration_seconds_bucket{analyzer=~\"history_too_long_by_wf_history|history_storage_too_large_by_wf_history|individual_payload_too_large_by_wf_history\"}[$__rate_interval])))",
                         "legendFormat": "p50"
                       }
                     },
@@ -147,7 +147,7 @@
                       "group": "",
                       "version": "v0",
                       "spec": {
-                        "expr": "histogram_quantile(0.95, sum by (le) (rate(flowrensic_analyzer_run_duration_seconds_bucket{analyzer=\"history_growth\"}[$__rate_interval])))",
+                        "expr": "histogram_quantile(0.95, sum by (le) (rate(flowrensic_analyzer_run_duration_seconds_bucket{analyzer=~\"history_too_long_by_wf_history|history_storage_too_large_by_wf_history|individual_payload_too_large_by_wf_history\"}[$__rate_interval])))",
                         "legendFormat": "p95"
                       }
                     },
@@ -163,7 +163,7 @@
                       "group": "",
                       "version": "v0",
                       "spec": {
-                        "expr": "histogram_quantile(0.99, sum by (le) (rate(flowrensic_analyzer_run_duration_seconds_bucket{analyzer=\"history_growth\"}[$__rate_interval])))",
+                        "expr": "histogram_quantile(0.99, sum by (le) (rate(flowrensic_analyzer_run_duration_seconds_bucket{analyzer=~\"history_too_long_by_wf_history|history_storage_too_large_by_wf_history|individual_payload_too_large_by_wf_history\"}[$__rate_interval])))",
                         "legendFormat": "p99"
                       }
                     },
@@ -196,8 +196,8 @@
         "kind": "Panel",
         "spec": {
           "id": 4,
-          "title": "history_growth findings detected",
-          "description": "Findings the analyzer history_growth raised in the time range shown, a count. A finding is counted once, when it is first seen. Normal: 0, or a low number that fits your system. Bad: a jump, something new went wrong; open the findings in the Flowrensic UI to see which runs. No data only when Prometheus gets no metrics from the server; it shows 0 from the start.",
+          "title": "history_too_long_by_wf_history, history_storage_too_large_by_wf_history and individual_payload_too_large_by_wf_history findings detected",
+          "description": "Findings the analyzers history_too_long_by_wf_history, history_storage_too_large_by_wf_history and individual_payload_too_large_by_wf_history raised in the time range shown, a count. A finding is counted once, when it is first seen. Normal: 0, or a low number that fits your system. Bad: a jump, something new went wrong; open the findings in the Flowrensic UI to see which runs. No data only when Prometheus gets no metrics from the server; it shows 0 from the start.",
           "links": [],
           "data": {
             "kind": "QueryGroup",
@@ -211,7 +211,7 @@
                       "group": "",
                       "version": "v0",
                       "spec": {
-                        "expr": "sum(increase(flowrensic_findings_detected_total{analyzer=\"history_growth\"}[$__range]))",
+                        "expr": "sum(increase(flowrensic_findings_detected_total{analyzer=~\"history_too_long_by_wf_history|history_storage_too_large_by_wf_history|individual_payload_too_large_by_wf_history\"}[$__range]))",
                         "legendFormat": "findings"
                       }
                     },
@@ -244,8 +244,8 @@
         "kind": "Panel",
         "spec": {
           "id": 5,
-          "title": "history_growth analysis failures per second",
-          "description": "Runs of the analyzer history_growth per second that ended with an error. Normal: 0. Bad: above 0, some runs were not judged; the error lines of the server say why. No data only when Prometheus gets no metrics from the server; it shows 0 from the start.",
+          "title": "history_too_long_by_wf_history, history_storage_too_large_by_wf_history and individual_payload_too_large_by_wf_history analysis failures per second",
+          "description": "Runs of the analyzers history_too_long_by_wf_history, history_storage_too_large_by_wf_history and individual_payload_too_large_by_wf_history per second that ended with an error. Normal: 0. Bad: above 0, some runs were not judged; the error lines of the server say why. No data only when Prometheus gets no metrics from the server; it shows 0 from the start.",
           "links": [],
           "data": {
             "kind": "QueryGroup",
@@ -259,7 +259,7 @@
                       "group": "",
                       "version": "v0",
                       "spec": {
-                        "expr": "sum(rate(flowrensic_analyzer_runs_total{analyzer=\"history_growth\",outcome=\"error\"}[$__rate_interval]))",
+                        "expr": "sum(rate(flowrensic_analyzer_runs_total{analyzer=~\"history_too_long_by_wf_history|history_storage_too_large_by_wf_history|individual_payload_too_large_by_wf_history\",outcome=\"error\"}[$__rate_interval]))",
                         "legendFormat": "failures"
                       }
                     },
@@ -310,7 +310,7 @@
             "spec": {
               "options": {
                 "mode": "markdown",
-                "content": "## failing_runs and failed_runs\nfailing_runs reports runs failing their workflow task, failed_runs runs the engine closed as failed."
+                "content": "## failing_runs_by_wf_history and failed_runs_by_wf_history\nfailing_runs_by_wf_history reports runs failing their workflow task, failed_runs_by_wf_history runs the engine closed as failed."
               },
               "fieldConfig": {
                 "defaults": {},
@@ -324,8 +324,8 @@
         "kind": "Panel",
         "spec": {
           "id": 7,
-          "title": "failing_runs and failed_runs analysis runs per second",
-          "description": "How many times per second the analyzers failing_runs and failed_runs ran, whatever the result. It runs when a run comes in or changes, so it follows the work of your Temporal system. There is no good or bad value of its own; 0 while your system works means no runs come in. No data only when Prometheus gets no metrics from the server; it shows 0 from the start.",
+          "title": "failing_runs_by_wf_history and failed_runs_by_wf_history analysis runs per second",
+          "description": "How many times per second the analyzers failing_runs_by_wf_history and failed_runs_by_wf_history ran, whatever the result. It runs when a run comes in or changes, so it follows the work of your Temporal system. There is no good or bad value of its own; 0 while your system works means no runs come in. No data only when Prometheus gets no metrics from the server; it shows 0 from the start.",
           "links": [],
           "data": {
             "kind": "QueryGroup",
@@ -339,7 +339,7 @@
                       "group": "",
                       "version": "v0",
                       "spec": {
-                        "expr": "sum(rate(flowrensic_analyzer_runs_total{analyzer=~\"failing_runs|failed_runs\"}[$__rate_interval]))",
+                        "expr": "sum(rate(flowrensic_analyzer_runs_total{analyzer=~\"failing_runs_by_wf_history|failed_runs_by_wf_history\"}[$__rate_interval]))",
                         "legendFormat": "runs"
                       }
                     },
@@ -372,8 +372,8 @@
         "kind": "Panel",
         "spec": {
           "id": 8,
-          "title": "failing_runs and failed_runs analysis runs duration p50, p95, p99",
-          "description": "Three lines, p50, p95 and p99: the time in seconds in which half, 95% and 99% of the runs of the analyzers failing_runs and failed_runs ended, over the last few minutes. Normal: well under a second. Bad: a line that climbs; large histories take longer, and a slow analyzer slows the intake of runs. No data when the analyzer did not run in that time.",
+          "title": "failing_runs_by_wf_history and failed_runs_by_wf_history analysis runs duration p50, p95, p99",
+          "description": "Three lines, p50, p95 and p99: the time in seconds in which half, 95% and 99% of the runs of the analyzers failing_runs_by_wf_history and failed_runs_by_wf_history ended, over the last few minutes. Normal: well under a second. Bad: a line that climbs; large histories take longer, and a slow analyzer slows the intake of runs. No data when the analyzer did not run in that time.",
           "links": [],
           "data": {
             "kind": "QueryGroup",
@@ -387,7 +387,7 @@
                       "group": "",
                       "version": "v0",
                       "spec": {
-                        "expr": "histogram_quantile(0.5, sum by (le) (rate(flowrensic_analyzer_run_duration_seconds_bucket{analyzer=~\"failing_runs|failed_runs\"}[$__rate_interval])))",
+                        "expr": "histogram_quantile(0.5, sum by (le) (rate(flowrensic_analyzer_run_duration_seconds_bucket{analyzer=~\"failing_runs_by_wf_history|failed_runs_by_wf_history\"}[$__rate_interval])))",
                         "legendFormat": "p50"
                       }
                     },
@@ -403,7 +403,7 @@
                       "group": "",
                       "version": "v0",
                       "spec": {
-                        "expr": "histogram_quantile(0.95, sum by (le) (rate(flowrensic_analyzer_run_duration_seconds_bucket{analyzer=~\"failing_runs|failed_runs\"}[$__rate_interval])))",
+                        "expr": "histogram_quantile(0.95, sum by (le) (rate(flowrensic_analyzer_run_duration_seconds_bucket{analyzer=~\"failing_runs_by_wf_history|failed_runs_by_wf_history\"}[$__rate_interval])))",
                         "legendFormat": "p95"
                       }
                     },
@@ -419,7 +419,7 @@
                       "group": "",
                       "version": "v0",
                       "spec": {
-                        "expr": "histogram_quantile(0.99, sum by (le) (rate(flowrensic_analyzer_run_duration_seconds_bucket{analyzer=~\"failing_runs|failed_runs\"}[$__rate_interval])))",
+                        "expr": "histogram_quantile(0.99, sum by (le) (rate(flowrensic_analyzer_run_duration_seconds_bucket{analyzer=~\"failing_runs_by_wf_history|failed_runs_by_wf_history\"}[$__rate_interval])))",
                         "legendFormat": "p99"
                       }
                     },
@@ -452,8 +452,8 @@
         "kind": "Panel",
         "spec": {
           "id": 9,
-          "title": "failing_runs and failed_runs findings detected",
-          "description": "Findings the analyzers failing_runs and failed_runs raised in the time range shown, a count. A finding is counted once, when it is first seen. Normal: 0, or a low number that fits your system. Bad: a jump, something new went wrong; open the findings in the Flowrensic UI to see which runs. No data only when Prometheus gets no metrics from the server; it shows 0 from the start.",
+          "title": "failing_runs_by_wf_history and failed_runs_by_wf_history findings detected",
+          "description": "Findings the analyzers failing_runs_by_wf_history and failed_runs_by_wf_history raised in the time range shown, a count. A finding is counted once, when it is first seen. Normal: 0, or a low number that fits your system. Bad: a jump, something new went wrong; open the findings in the Flowrensic UI to see which runs. No data only when Prometheus gets no metrics from the server; it shows 0 from the start.",
           "links": [],
           "data": {
             "kind": "QueryGroup",
@@ -467,7 +467,7 @@
                       "group": "",
                       "version": "v0",
                       "spec": {
-                        "expr": "sum(increase(flowrensic_findings_detected_total{analyzer=~\"failing_runs|failed_runs\"}[$__range]))",
+                        "expr": "sum(increase(flowrensic_findings_detected_total{analyzer=~\"failing_runs_by_wf_history|failed_runs_by_wf_history\"}[$__range]))",
                         "legendFormat": "findings"
                       }
                     },
@@ -500,8 +500,8 @@
         "kind": "Panel",
         "spec": {
           "id": 10,
-          "title": "failing_runs and failed_runs analysis failures per second",
-          "description": "Runs of the analyzers failing_runs and failed_runs per second that ended with an error. Normal: 0. Bad: above 0, some runs were not judged; the error lines of the server say why. No data only when Prometheus gets no metrics from the server; it shows 0 from the start.",
+          "title": "failing_runs_by_wf_history and failed_runs_by_wf_history analysis failures per second",
+          "description": "Runs of the analyzers failing_runs_by_wf_history and failed_runs_by_wf_history per second that ended with an error. Normal: 0. Bad: above 0, some runs were not judged; the error lines of the server say why. No data only when Prometheus gets no metrics from the server; it shows 0 from the start.",
           "links": [],
           "data": {
             "kind": "QueryGroup",
@@ -515,7 +515,7 @@
                       "group": "",
                       "version": "v0",
                       "spec": {
-                        "expr": "sum(rate(flowrensic_analyzer_runs_total{analyzer=~\"failing_runs|failed_runs\",outcome=\"error\"}[$__rate_interval]))",
+                        "expr": "sum(rate(flowrensic_analyzer_runs_total{analyzer=~\"failing_runs_by_wf_history|failed_runs_by_wf_history\",outcome=\"error\"}[$__rate_interval]))",
                         "legendFormat": "failures"
                       }
                     },
@@ -566,7 +566,7 @@
             "spec": {
               "options": {
                 "mode": "markdown",
-                "content": "## wedged_runs\nReports an open run that has made no progress for too long."
+                "content": "## wedged_runs_by_wf_history\nReports an open run that has made no progress for too long."
               },
               "fieldConfig": {
                 "defaults": {},
@@ -580,8 +580,8 @@
         "kind": "Panel",
         "spec": {
           "id": 12,
-          "title": "wedged_runs analysis runs per second",
-          "description": "How many times per second the analyzer wedged_runs ran, whatever the result. It runs when a run comes in or changes, so it follows the work of your Temporal system. There is no good or bad value of its own; 0 while your system works means no runs come in. No data only when Prometheus gets no metrics from the server; it shows 0 from the start.",
+          "title": "wedged_runs_by_wf_history analysis runs per second",
+          "description": "How many times per second the analyzer wedged_runs_by_wf_history ran, whatever the result. It runs when a run comes in or changes, so it follows the work of your Temporal system. There is no good or bad value of its own; 0 while your system works means no runs come in. No data only when Prometheus gets no metrics from the server; it shows 0 from the start.",
           "links": [],
           "data": {
             "kind": "QueryGroup",
@@ -595,7 +595,7 @@
                       "group": "",
                       "version": "v0",
                       "spec": {
-                        "expr": "sum(rate(flowrensic_analyzer_runs_total{analyzer=\"wedged_runs\"}[$__rate_interval]))",
+                        "expr": "sum(rate(flowrensic_analyzer_runs_total{analyzer=\"wedged_runs_by_wf_history\"}[$__rate_interval]))",
                         "legendFormat": "runs"
                       }
                     },
@@ -628,8 +628,8 @@
         "kind": "Panel",
         "spec": {
           "id": 13,
-          "title": "wedged_runs analysis runs duration p50, p95, p99",
-          "description": "Three lines, p50, p95 and p99: the time in seconds in which half, 95% and 99% of the runs of the analyzer wedged_runs ended, over the last few minutes. Normal: well under a second. Bad: a line that climbs; large histories take longer, and a slow analyzer slows the intake of runs. No data when the analyzer did not run in that time.",
+          "title": "wedged_runs_by_wf_history analysis runs duration p50, p95, p99",
+          "description": "Three lines, p50, p95 and p99: the time in seconds in which half, 95% and 99% of the runs of the analyzer wedged_runs_by_wf_history ended, over the last few minutes. Normal: well under a second. Bad: a line that climbs; large histories take longer, and a slow analyzer slows the intake of runs. No data when the analyzer did not run in that time.",
           "links": [],
           "data": {
             "kind": "QueryGroup",
@@ -643,7 +643,7 @@
                       "group": "",
                       "version": "v0",
                       "spec": {
-                        "expr": "histogram_quantile(0.5, sum by (le) (rate(flowrensic_analyzer_run_duration_seconds_bucket{analyzer=\"wedged_runs\"}[$__rate_interval])))",
+                        "expr": "histogram_quantile(0.5, sum by (le) (rate(flowrensic_analyzer_run_duration_seconds_bucket{analyzer=\"wedged_runs_by_wf_history\"}[$__rate_interval])))",
                         "legendFormat": "p50"
                       }
                     },
@@ -659,7 +659,7 @@
                       "group": "",
                       "version": "v0",
                       "spec": {
-                        "expr": "histogram_quantile(0.95, sum by (le) (rate(flowrensic_analyzer_run_duration_seconds_bucket{analyzer=\"wedged_runs\"}[$__rate_interval])))",
+                        "expr": "histogram_quantile(0.95, sum by (le) (rate(flowrensic_analyzer_run_duration_seconds_bucket{analyzer=\"wedged_runs_by_wf_history\"}[$__rate_interval])))",
                         "legendFormat": "p95"
                       }
                     },
@@ -675,7 +675,7 @@
                       "group": "",
                       "version": "v0",
                       "spec": {
-                        "expr": "histogram_quantile(0.99, sum by (le) (rate(flowrensic_analyzer_run_duration_seconds_bucket{analyzer=\"wedged_runs\"}[$__rate_interval])))",
+                        "expr": "histogram_quantile(0.99, sum by (le) (rate(flowrensic_analyzer_run_duration_seconds_bucket{analyzer=\"wedged_runs_by_wf_history\"}[$__rate_interval])))",
                         "legendFormat": "p99"
                       }
                     },
@@ -708,8 +708,8 @@
         "kind": "Panel",
         "spec": {
           "id": 14,
-          "title": "wedged_runs findings detected",
-          "description": "Findings the analyzer wedged_runs raised in the time range shown, a count. A finding is counted once, when it is first seen. Normal: 0, or a low number that fits your system. Bad: a jump, something new went wrong; open the findings in the Flowrensic UI to see which runs. No data only when Prometheus gets no metrics from the server; it shows 0 from the start.",
+          "title": "wedged_runs_by_wf_history findings detected",
+          "description": "Findings the analyzer wedged_runs_by_wf_history raised in the time range shown, a count. A finding is counted once, when it is first seen. Normal: 0, or a low number that fits your system. Bad: a jump, something new went wrong; open the findings in the Flowrensic UI to see which runs. No data only when Prometheus gets no metrics from the server; it shows 0 from the start.",
           "links": [],
           "data": {
             "kind": "QueryGroup",
@@ -723,7 +723,7 @@
                       "group": "",
                       "version": "v0",
                       "spec": {
-                        "expr": "sum(increase(flowrensic_findings_detected_total{analyzer=\"wedged_runs\"}[$__range]))",
+                        "expr": "sum(increase(flowrensic_findings_detected_total{analyzer=\"wedged_runs_by_wf_history\"}[$__range]))",
                         "legendFormat": "findings"
                       }
                     },
@@ -756,8 +756,8 @@
         "kind": "Panel",
         "spec": {
           "id": 15,
-          "title": "wedged_runs analysis failures per second",
-          "description": "Runs of the analyzer wedged_runs per second that ended with an error. Normal: 0. Bad: above 0, some runs were not judged; the error lines of the server say why. No data only when Prometheus gets no metrics from the server; it shows 0 from the start.",
+          "title": "wedged_runs_by_wf_history analysis failures per second",
+          "description": "Runs of the analyzer wedged_runs_by_wf_history per second that ended with an error. Normal: 0. Bad: above 0, some runs were not judged; the error lines of the server say why. No data only when Prometheus gets no metrics from the server; it shows 0 from the start.",
           "links": [],
           "data": {
             "kind": "QueryGroup",
@@ -771,7 +771,7 @@
                       "group": "",
                       "version": "v0",
                       "spec": {
-                        "expr": "sum(rate(flowrensic_analyzer_runs_total{analyzer=\"wedged_runs\",outcome=\"error\"}[$__rate_interval]))",
+                        "expr": "sum(rate(flowrensic_analyzer_runs_total{analyzer=\"wedged_runs_by_wf_history\",outcome=\"error\"}[$__rate_interval]))",
                         "legendFormat": "failures"
                       }
                     },
@@ -822,7 +822,7 @@
             "spec": {
               "options": {
                 "mode": "markdown",
-                "content": "## refused_updates\nReports a run that refuses every update it is sent."
+                "content": "## refused_updates_by_wf_history\nReports a run that refuses every update it is sent."
               },
               "fieldConfig": {
                 "defaults": {},
@@ -836,8 +836,8 @@
         "kind": "Panel",
         "spec": {
           "id": 17,
-          "title": "refused_updates analysis runs per second",
-          "description": "How many times per second the analyzer refused_updates ran, whatever the result. It runs when a run comes in or changes, so it follows the work of your Temporal system. There is no good or bad value of its own; 0 while your system works means no runs come in. No data only when Prometheus gets no metrics from the server; it shows 0 from the start.",
+          "title": "refused_updates_by_wf_history analysis runs per second",
+          "description": "How many times per second the analyzer refused_updates_by_wf_history ran, whatever the result. It runs when a run comes in or changes, so it follows the work of your Temporal system. There is no good or bad value of its own; 0 while your system works means no runs come in. No data only when Prometheus gets no metrics from the server; it shows 0 from the start.",
           "links": [],
           "data": {
             "kind": "QueryGroup",
@@ -851,7 +851,7 @@
                       "group": "",
                       "version": "v0",
                       "spec": {
-                        "expr": "sum(rate(flowrensic_analyzer_runs_total{analyzer=\"refused_updates\"}[$__rate_interval]))",
+                        "expr": "sum(rate(flowrensic_analyzer_runs_total{analyzer=\"refused_updates_by_wf_history\"}[$__rate_interval]))",
                         "legendFormat": "runs"
                       }
                     },
@@ -884,8 +884,8 @@
         "kind": "Panel",
         "spec": {
           "id": 18,
-          "title": "refused_updates analysis runs duration p50, p95, p99",
-          "description": "Three lines, p50, p95 and p99: the time in seconds in which half, 95% and 99% of the runs of the analyzer refused_updates ended, over the last few minutes. Normal: well under a second. Bad: a line that climbs; large histories take longer, and a slow analyzer slows the intake of runs. No data when the analyzer did not run in that time.",
+          "title": "refused_updates_by_wf_history analysis runs duration p50, p95, p99",
+          "description": "Three lines, p50, p95 and p99: the time in seconds in which half, 95% and 99% of the runs of the analyzer refused_updates_by_wf_history ended, over the last few minutes. Normal: well under a second. Bad: a line that climbs; large histories take longer, and a slow analyzer slows the intake of runs. No data when the analyzer did not run in that time.",
           "links": [],
           "data": {
             "kind": "QueryGroup",
@@ -899,7 +899,7 @@
                       "group": "",
                       "version": "v0",
                       "spec": {
-                        "expr": "histogram_quantile(0.5, sum by (le) (rate(flowrensic_analyzer_run_duration_seconds_bucket{analyzer=\"refused_updates\"}[$__rate_interval])))",
+                        "expr": "histogram_quantile(0.5, sum by (le) (rate(flowrensic_analyzer_run_duration_seconds_bucket{analyzer=\"refused_updates_by_wf_history\"}[$__rate_interval])))",
                         "legendFormat": "p50"
                       }
                     },
@@ -915,7 +915,7 @@
                       "group": "",
                       "version": "v0",
                       "spec": {
-                        "expr": "histogram_quantile(0.95, sum by (le) (rate(flowrensic_analyzer_run_duration_seconds_bucket{analyzer=\"refused_updates\"}[$__rate_interval])))",
+                        "expr": "histogram_quantile(0.95, sum by (le) (rate(flowrensic_analyzer_run_duration_seconds_bucket{analyzer=\"refused_updates_by_wf_history\"}[$__rate_interval])))",
                         "legendFormat": "p95"
                       }
                     },
@@ -931,7 +931,7 @@
                       "group": "",
                       "version": "v0",
                       "spec": {
-                        "expr": "histogram_quantile(0.99, sum by (le) (rate(flowrensic_analyzer_run_duration_seconds_bucket{analyzer=\"refused_updates\"}[$__rate_interval])))",
+                        "expr": "histogram_quantile(0.99, sum by (le) (rate(flowrensic_analyzer_run_duration_seconds_bucket{analyzer=\"refused_updates_by_wf_history\"}[$__rate_interval])))",
                         "legendFormat": "p99"
                       }
                     },
@@ -964,8 +964,8 @@
         "kind": "Panel",
         "spec": {
           "id": 19,
-          "title": "refused_updates findings detected",
-          "description": "Findings the analyzer refused_updates raised in the time range shown, a count. A finding is counted once, when it is first seen. Normal: 0, or a low number that fits your system. Bad: a jump, something new went wrong; open the findings in the Flowrensic UI to see which runs. No data only when Prometheus gets no metrics from the server; it shows 0 from the start.",
+          "title": "refused_updates_by_wf_history findings detected",
+          "description": "Findings the analyzer refused_updates_by_wf_history raised in the time range shown, a count. A finding is counted once, when it is first seen. Normal: 0, or a low number that fits your system. Bad: a jump, something new went wrong; open the findings in the Flowrensic UI to see which runs. No data only when Prometheus gets no metrics from the server; it shows 0 from the start.",
           "links": [],
           "data": {
             "kind": "QueryGroup",
@@ -979,7 +979,7 @@
                       "group": "",
                       "version": "v0",
                       "spec": {
-                        "expr": "sum(increase(flowrensic_findings_detected_total{analyzer=\"refused_updates\"}[$__range]))",
+                        "expr": "sum(increase(flowrensic_findings_detected_total{analyzer=\"refused_updates_by_wf_history\"}[$__range]))",
                         "legendFormat": "findings"
                       }
                     },
@@ -1012,8 +1012,8 @@
         "kind": "Panel",
         "spec": {
           "id": 20,
-          "title": "refused_updates analysis failures per second",
-          "description": "Runs of the analyzer refused_updates per second that ended with an error. Normal: 0. Bad: above 0, some runs were not judged; the error lines of the server say why. No data only when Prometheus gets no metrics from the server; it shows 0 from the start.",
+          "title": "refused_updates_by_wf_history analysis failures per second",
+          "description": "Runs of the analyzer refused_updates_by_wf_history per second that ended with an error. Normal: 0. Bad: above 0, some runs were not judged; the error lines of the server say why. No data only when Prometheus gets no metrics from the server; it shows 0 from the start.",
           "links": [],
           "data": {
             "kind": "QueryGroup",
@@ -1027,7 +1027,7 @@
                       "group": "",
                       "version": "v0",
                       "spec": {
-                        "expr": "sum(rate(flowrensic_analyzer_runs_total{analyzer=\"refused_updates\",outcome=\"error\"}[$__rate_interval]))",
+                        "expr": "sum(rate(flowrensic_analyzer_runs_total{analyzer=\"refused_updates_by_wf_history\",outcome=\"error\"}[$__rate_interval]))",
                         "legendFormat": "failures"
                       }
                     },
@@ -1078,7 +1078,7 @@
             "spec": {
               "options": {
                 "mode": "markdown",
-                "content": "## dangling_work\nReports a closed run that left an activity unfinished."
+                "content": "## dangling_work_by_wf_history\nReports a closed run that left an activity unfinished."
               },
               "fieldConfig": {
                 "defaults": {},
@@ -1092,8 +1092,8 @@
         "kind": "Panel",
         "spec": {
           "id": 22,
-          "title": "dangling_work analysis runs per second",
-          "description": "How many times per second the analyzer dangling_work ran, whatever the result. It runs when a run comes in or changes, so it follows the work of your Temporal system. There is no good or bad value of its own; 0 while your system works means no runs come in. No data only when Prometheus gets no metrics from the server; it shows 0 from the start.",
+          "title": "dangling_work_by_wf_history analysis runs per second",
+          "description": "How many times per second the analyzer dangling_work_by_wf_history ran, whatever the result. It runs when a run comes in or changes, so it follows the work of your Temporal system. There is no good or bad value of its own; 0 while your system works means no runs come in. No data only when Prometheus gets no metrics from the server; it shows 0 from the start.",
           "links": [],
           "data": {
             "kind": "QueryGroup",
@@ -1107,7 +1107,7 @@
                       "group": "",
                       "version": "v0",
                       "spec": {
-                        "expr": "sum(rate(flowrensic_analyzer_runs_total{analyzer=\"dangling_work\"}[$__rate_interval]))",
+                        "expr": "sum(rate(flowrensic_analyzer_runs_total{analyzer=\"dangling_work_by_wf_history\"}[$__rate_interval]))",
                         "legendFormat": "runs"
                       }
                     },
@@ -1140,8 +1140,8 @@
         "kind": "Panel",
         "spec": {
           "id": 23,
-          "title": "dangling_work analysis runs duration p50, p95, p99",
-          "description": "Three lines, p50, p95 and p99: the time in seconds in which half, 95% and 99% of the runs of the analyzer dangling_work ended, over the last few minutes. Normal: well under a second. Bad: a line that climbs; large histories take longer, and a slow analyzer slows the intake of runs. No data when the analyzer did not run in that time.",
+          "title": "dangling_work_by_wf_history analysis runs duration p50, p95, p99",
+          "description": "Three lines, p50, p95 and p99: the time in seconds in which half, 95% and 99% of the runs of the analyzer dangling_work_by_wf_history ended, over the last few minutes. Normal: well under a second. Bad: a line that climbs; large histories take longer, and a slow analyzer slows the intake of runs. No data when the analyzer did not run in that time.",
           "links": [],
           "data": {
             "kind": "QueryGroup",
@@ -1155,7 +1155,7 @@
                       "group": "",
                       "version": "v0",
                       "spec": {
-                        "expr": "histogram_quantile(0.5, sum by (le) (rate(flowrensic_analyzer_run_duration_seconds_bucket{analyzer=\"dangling_work\"}[$__rate_interval])))",
+                        "expr": "histogram_quantile(0.5, sum by (le) (rate(flowrensic_analyzer_run_duration_seconds_bucket{analyzer=\"dangling_work_by_wf_history\"}[$__rate_interval])))",
                         "legendFormat": "p50"
                       }
                     },
@@ -1171,7 +1171,7 @@
                       "group": "",
                       "version": "v0",
                       "spec": {
-                        "expr": "histogram_quantile(0.95, sum by (le) (rate(flowrensic_analyzer_run_duration_seconds_bucket{analyzer=\"dangling_work\"}[$__rate_interval])))",
+                        "expr": "histogram_quantile(0.95, sum by (le) (rate(flowrensic_analyzer_run_duration_seconds_bucket{analyzer=\"dangling_work_by_wf_history\"}[$__rate_interval])))",
                         "legendFormat": "p95"
                       }
                     },
@@ -1187,7 +1187,7 @@
                       "group": "",
                       "version": "v0",
                       "spec": {
-                        "expr": "histogram_quantile(0.99, sum by (le) (rate(flowrensic_analyzer_run_duration_seconds_bucket{analyzer=\"dangling_work\"}[$__rate_interval])))",
+                        "expr": "histogram_quantile(0.99, sum by (le) (rate(flowrensic_analyzer_run_duration_seconds_bucket{analyzer=\"dangling_work_by_wf_history\"}[$__rate_interval])))",
                         "legendFormat": "p99"
                       }
                     },
@@ -1220,8 +1220,8 @@
         "kind": "Panel",
         "spec": {
           "id": 24,
-          "title": "dangling_work findings detected",
-          "description": "Findings the analyzer dangling_work raised in the time range shown, a count. A finding is counted once, when it is first seen. Normal: 0, or a low number that fits your system. Bad: a jump, something new went wrong; open the findings in the Flowrensic UI to see which runs. No data only when Prometheus gets no metrics from the server; it shows 0 from the start.",
+          "title": "dangling_work_by_wf_history findings detected",
+          "description": "Findings the analyzer dangling_work_by_wf_history raised in the time range shown, a count. A finding is counted once, when it is first seen. Normal: 0, or a low number that fits your system. Bad: a jump, something new went wrong; open the findings in the Flowrensic UI to see which runs. No data only when Prometheus gets no metrics from the server; it shows 0 from the start.",
           "links": [],
           "data": {
             "kind": "QueryGroup",
@@ -1235,7 +1235,7 @@
                       "group": "",
                       "version": "v0",
                       "spec": {
-                        "expr": "sum(increase(flowrensic_findings_detected_total{analyzer=\"dangling_work\"}[$__range]))",
+                        "expr": "sum(increase(flowrensic_findings_detected_total{analyzer=\"dangling_work_by_wf_history\"}[$__range]))",
                         "legendFormat": "findings"
                       }
                     },
@@ -1268,8 +1268,8 @@
         "kind": "Panel",
         "spec": {
           "id": 25,
-          "title": "dangling_work analysis failures per second",
-          "description": "Runs of the analyzer dangling_work per second that ended with an error. Normal: 0. Bad: above 0, some runs were not judged; the error lines of the server say why. No data only when Prometheus gets no metrics from the server; it shows 0 from the start.",
+          "title": "dangling_work_by_wf_history analysis failures per second",
+          "description": "Runs of the analyzer dangling_work_by_wf_history per second that ended with an error. Normal: 0. Bad: above 0, some runs were not judged; the error lines of the server say why. No data only when Prometheus gets no metrics from the server; it shows 0 from the start.",
           "links": [],
           "data": {
             "kind": "QueryGroup",
@@ -1283,7 +1283,7 @@
                       "group": "",
                       "version": "v0",
                       "spec": {
-                        "expr": "sum(rate(flowrensic_analyzer_runs_total{analyzer=\"dangling_work\",outcome=\"error\"}[$__rate_interval]))",
+                        "expr": "sum(rate(flowrensic_analyzer_runs_total{analyzer=\"dangling_work_by_wf_history\",outcome=\"error\"}[$__rate_interval]))",
                         "legendFormat": "failures"
                       }
                     },
@@ -1683,7 +1683,7 @@
                       "group": "",
                       "version": "v0",
                       "spec": {
-                        "expr": "sum(increase(flowrensic_findings_detected_total{class=~\"backlog_growing|no_pollers|high_schedule_to_start|low_sync_match|resource_exhausted|temporal_database|workflow_task_failures|activity_timeouts_rising|history_too_large|history_service_trouble|namespace_near_limit|namespace_throttled|engine_metrics_missing\"}[$__range]))",
+                        "expr": "sum(increase(flowrensic_findings_detected_total{class=~\"backlog_growing|no_pollers|high_schedule_to_start|low_sync_match|resource_exhausted|temporal_database|workflow_task_failures|activity_timeouts_rising|history_too_long|history_storage_too_large|individual_payload_too_large|history_service_trouble|namespace_near_limit|namespace_throttled|engine_metrics_missing\"}[$__range]))",
                         "legendFormat": "findings"
                       }
                     },
