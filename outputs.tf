@@ -13,6 +13,21 @@ output "ingest_load_balancer" {
   value       = local.ingest_lb.arn
 }
 
+output "ui_load_balancer_dns_name" {
+  description = "The DNS name of the module's public UI load balancer, where ui_name and, with monitoring ecs, grafana. and ui_name point from allowed_cidrs. Empty when there is none. With dns_zone empty, point the names here yourself."
+  value       = local.ui_public == 1 ? aws_lb.ui_public[0].dns_name : ""
+}
+
+output "ui_internal_load_balancer_dns_name" {
+  description = "The DNS name of the internal UI load balancer, the module's own or the user's, where ui_name and, with monitoring ecs, grafana. and ui_name point inside the VPC. Empty when there is none. With dns_zone empty, point the names here yourself."
+  value       = local.internal == 1 ? local.internal_lb.dns_name : ""
+}
+
+output "ingest_load_balancer_dns_name" {
+  description = "The DNS name of the public load balancer ingest_name points at, the module's own or the user's. With dns_zone empty, point the name here yourself."
+  value       = local.ingest_lb.dns_name
+}
+
 output "bucket" {
   description = "The bucket that holds the histories."
   value       = aws_s3_bucket.histories.id

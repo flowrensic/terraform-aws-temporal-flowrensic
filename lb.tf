@@ -172,7 +172,7 @@ resource "aws_lb_listener" "ui_public" {
   port              = 443
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-TLS13-1-2-2021-06"
-  certificate_arn   = aws_acm_certificate_validation.this.certificate_arn
+  certificate_arn   = local.certificate
   default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.ui_public[0].arn
@@ -185,7 +185,7 @@ resource "aws_lb_listener" "ui_internal" {
   port              = 443
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-TLS13-1-2-2021-06"
-  certificate_arn   = aws_acm_certificate_validation.this.certificate_arn
+  certificate_arn   = local.certificate
   default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.ui_internal[0].arn
@@ -198,7 +198,7 @@ resource "aws_lb_listener" "ingest" {
   port              = 443
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-TLS13-1-2-2021-06"
-  certificate_arn   = aws_acm_certificate_validation.this.certificate_arn
+  certificate_arn   = local.certificate
   default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.ingest.arn
@@ -210,13 +210,13 @@ resource "aws_lb_listener" "ingest" {
 resource "aws_lb_listener_certificate" "public" {
   count           = local.reuse_public
   listener_arn    = var.public_listener_arn
-  certificate_arn = aws_acm_certificate_validation.this.certificate_arn
+  certificate_arn = local.certificate
 }
 
 resource "aws_lb_listener_certificate" "internal" {
   count           = local.reuse_internal
   listener_arn    = var.internal_listener_arn
-  certificate_arn = aws_acm_certificate_validation.this.certificate_arn
+  certificate_arn = local.certificate
 }
 
 resource "aws_lb_listener_rule" "ingest" {

@@ -4,8 +4,9 @@ variable "region" {
 }
 
 variable "image_version" {
-  description = "The tag of the Flowrensic image to run, such as 0.5.11."
+  description = "Leave it unset: the module runs the server image of its own release. Only Flowrensic's own tests set another tag here."
   type        = string
+  default     = null
 }
 
 variable "vpc_id" {
@@ -53,8 +54,18 @@ variable "ingest_name" {
 }
 
 variable "dns_zone" {
-  description = "The public Route 53 zone both names are in, such as example.com."
+  description = "The public Route 53 zone both names are in, such as example.com. Empty: the module writes no DNS record and makes no private zone, and you point the names at the load balancers of the outputs yourself. Then certificate_arn is needed."
   type        = string
+}
+
+variable "certificate_arn" {
+  description = "An ACM certificate in region that already names ui_name, ingest_name and, with monitoring ecs, grafana. and ui_name. Empty: the module makes one and checks it in dns_zone."
+  type        = string
+  default     = ""
+  validation {
+    condition     = var.certificate_arn != "" || var.dns_zone != ""
+    error_message = "With dns_zone empty, certificate_arn is needed: the module checks its own certificate in dns_zone."
+  }
 }
 
 variable "envs_parameter" {

@@ -25,7 +25,7 @@ resource "aws_ecs_task_definition" "server" {
 
   container_definitions = jsonencode(concat([{
     name      = "server"
-    image     = "${local.image}:${var.image_version}"
+    image     = "${local.image}:${local.image_tag}"
     essential = true
     portMappings = [
       { containerPort = local.main_port, protocol = "tcp" },

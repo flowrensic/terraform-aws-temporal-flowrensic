@@ -32,6 +32,11 @@ locals {
   own_internal   = local.reuse_internal == 0 && length(var.allowed_security_group_ids) > 0 ? 1 : 0
   internal       = max(local.own_internal, local.reuse_internal)
 
+  # Whether the module writes the DNS records and makes the certificate, or the user does.
+  dns         = var.dns_zone != "" ? 1 : 0
+  own_cert    = var.certificate_arn == "" ? 1 : 0
+  certificate = local.own_cert == 1 ? aws_acm_certificate_validation.this[0].certificate_arn : var.certificate_arn
+
   # What the mode makes: RDS and its settings in full mode only.
   full                  = var.mode == "full" ? 1 : 0
   image                 = coalesce(var.image, var.mode == "full" ? "flowrensic/temporal-flowrensic" : "flowrensic/temporal-flowrensic-standalone")

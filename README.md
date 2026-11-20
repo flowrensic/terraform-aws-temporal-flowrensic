@@ -26,14 +26,12 @@ The module is on the Terraform Registry. In your root module:
 
     module "flowrensic" {
       source  = "flowrensic/temporal-flowrensic/aws"
-      version = "0.6.4"
-
-      image_version = "0.6.4"
+      version = "0.6.84"
       ...
     }
 
-Each Flowrensic release has a module version with the same number. Give the same
-number to version and image_version.
+Each Flowrensic release has a module version with the same number. The module
+runs the server image of its own release, so version is the only number you set.
 
 ## Modes
 
@@ -80,18 +78,22 @@ Manager. Nobody types it, and it is not in the state either.
 Needed:
 
 - region: the AWS region, the same as your provider's.
-- image_version: the tag of flowrensic/temporal-flowrensic to run.
 - vpc_id: the VPC to run in.
 - public_subnet_ids: public subnets in two zones. The public load balancers run
   there, and the server too unless you set server_subnet_ids.
 - ui_name: the name of the UI and API, such as flowrensic.internal.example.com.
 - ingest_name: the public name CI jobs send to, such as flowrensic-ingest.example.com.
-- dns_zone: the public Route 53 zone both names are in.
+- dns_zone: the public Route 53 zone both names are in. Empty if you keep your DNS elsewhere: the module
+  then writes no record, and you point the names at the load balancers of the outputs
+  ui_load_balancer_dns_name, ui_internal_load_balancer_dns_name and ingest_load_balancer_dns_name.
 - envs_parameter: the SSM parameter that holds FLOWRENSIC_KNOWN_ENVS, the env list with its keys.
 
 With a default:
 
 - name: the start of every resource name, flowrensic.
+- certificate_arn: an ACM certificate you already have in region, for ui_name, ingest_name and, with
+  monitoring ecs, grafana. and ui_name. Empty by default: the module makes one and checks it in
+  dns_zone. Needed when dns_zone is empty.
 - mode: full or standalone, full by default. See Modes above.
 - database_subnet_ids: in full mode, subnets in two zones for the database. Needed
   in full mode, and not allowed in standalone mode.
@@ -241,7 +243,7 @@ makes a new certificate.
 
 ## Updates
 
-Change version and image_version to the new release and run terraform init and
+Change version to the new release and run terraform init and
 terraform apply. The old server stops before the new
 one starts, so Flowrensic is away for a minute or two. In standalone mode the new
 server starts with an empty database.

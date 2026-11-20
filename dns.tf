@@ -1,9 +1,11 @@
 data "aws_route53_zone" "public" {
+  count        = local.dns
   name         = var.dns_zone
   private_zone = false
 }
 
 resource "aws_acm_certificate" "this" {
+  count                     = local.own_cert
   domain_name               = var.ui_name
   subject_alternative_names = concat([var.ingest_name], var.monitoring == "ecs" ? [local.grafana_name] : [])
   validation_method         = "DNS"
@@ -14,9 +16,9 @@ resource "aws_acm_certificate" "this" {
 
 resource "aws_route53_record" "validation" {
   for_each = {
-    for option in aws_acm_certificate.this.domain_validation_options : option.domain_name => option
+    for option in local.own_cert == 1 ? aws_acm_certificate.this[0].domain_validation_options : [] : option.domain_name => option
   }
-  zone_id         = data.aws_route53_zone.public.zone_id
+  zone_id         = data.aws_route53_zone.public[0].zone_id
   name            = each.value.resource_record_name
   type            = each.value.resource_record_type
   records         = [each.value.resource_record_value]
@@ -25,13 +27,14 @@ resource "aws_route53_record" "validation" {
 }
 
 resource "aws_acm_certificate_validation" "this" {
-  certificate_arn         = aws_acm_certificate.this.arn
+  count                   = local.own_cert
+  certificate_arn         = aws_acm_certificate.this[0].arn
   validation_record_fqdns = [for record in aws_route53_record.validation : record.fqdn]
 }
 
 resource "aws_route53_record" "ui_public" {
-  count   = local.ui_public
-  zone_id = data.aws_route53_zone.public.zone_id
+  count   = local.ui_public * local.dns
+  zone_id = data.aws_route53_zone.public[0].zone_id
   name    = var.ui_name
   type    = "A"
   alias {
@@ -42,7 +45,8 @@ resource "aws_route53_record" "ui_public" {
 }
 
 resource "aws_route53_record" "ingest" {
-  zone_id = data.aws_route53_zone.public.zone_id
+  count   = local.dns
+  zone_id = data.aws_route53_zone.public[0].zone_id
   name    = var.ingest_name
   type    = "A"
   alias {
@@ -56,7 +60,7 @@ resource "aws_route53_record" "ingest" {
 # own or the user's, so a server in an allowed security group reaches it by the
 # same name.
 resource "aws_route53_zone" "ui_private" {
-  count         = local.internal
+  count         = local.internal * local.dns
   name          = var.ui_name
   force_destroy = true
   vpc {
@@ -65,7 +69,7 @@ resource "aws_route53_zone" "ui_private" {
 }
 
 resource "aws_route53_record" "ui_private" {
-  count   = local.internal
+  count   = local.internal * local.dns
   zone_id = aws_route53_zone.ui_private[0].zone_id
   name    = var.ui_name
   type    = "A"
@@ -74,4 +78,20 @@ resource "aws_route53_record" "ui_private" {
     zone_id                = local.internal_lb.zone_id
     evaluate_target_health = false
   }
+}
+
+# The addresses of the module before the certificate and the records could be the user's.
+moved {
+  from = aws_acm_certificate.this
+  to   = aws_acm_certificate.this[0]
+}
+
+moved {
+  from = aws_acm_certificate_validation.this
+  to   = aws_acm_certificate_validation.this[0]
+}
+
+moved {
+  from = aws_route53_record.ingest
+  to   = aws_route53_record.ingest[0]
 }

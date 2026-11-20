@@ -306,8 +306,8 @@ resource "aws_lb_listener_rule" "grafana" {
 }
 
 resource "aws_route53_record" "grafana_public" {
-  count   = local.monitoring_ecs * local.ui_public
-  zone_id = data.aws_route53_zone.public.zone_id
+  count   = local.monitoring_ecs * local.ui_public * local.dns
+  zone_id = data.aws_route53_zone.public[0].zone_id
   name    = local.grafana_name
   type    = "A"
   alias {
@@ -318,7 +318,7 @@ resource "aws_route53_record" "grafana_public" {
 }
 
 resource "aws_route53_record" "grafana_private" {
-  count   = local.monitoring_ecs * local.internal
+  count   = local.monitoring_ecs * local.internal * local.dns
   zone_id = aws_route53_zone.ui_private[0].zone_id
   name    = local.grafana_name
   type    = "A"
