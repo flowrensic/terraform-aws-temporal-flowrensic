@@ -26,7 +26,7 @@ The module is on the Terraform Registry. In your root module:
 
     module "flowrensic" {
       source  = "flowrensic/temporal-flowrensic/aws"
-      version = "0.6.84"
+      version = "0.6.85"
       ...
     }
 

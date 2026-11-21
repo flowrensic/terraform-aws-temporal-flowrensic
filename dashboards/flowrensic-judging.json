@@ -1363,7 +1363,7 @@
                       "group": "",
                       "version": "v0",
                       "spec": {
-                        "expr": "sum(increase(flowrensic_findings_detected_total{class=~\"activity_timeout_too_short|activity_timeout_too_long|activity_retry_limit_too_high|activity_near_timeout|activity_timed_out_waiting_for_worker|activity_timed_out_missing_heartbeat|activity_timed_out_running_too_long\"}[$__range]))",
+                        "expr": "sum(increase(flowrensic_findings_detected_total{class=~\"activity_timeout_too_short|activity_timeout_too_long|activity_retry_limit_too_high|activity_near_timeout|activity_timed_out_waiting_for_worker|activity_timed_out_missing_heartbeat|activity_timed_out_running_too_long|activity_timed_out_retrying_too_long\"}[$__range]))",
                         "legendFormat": "findings"
                       }
                     },
@@ -2003,7 +2003,7 @@
                       "group": "",
                       "version": "v0",
                       "spec": {
-                        "expr": "sum(increase(flowrensic_findings_detected_total{class=~\"run_messages_unhandled\"}[$__range]))",
+                        "expr": "sum(increase(flowrensic_findings_detected_total{class=~\"unfinished_updates|failed_queries\"}[$__range]))",
                         "legendFormat": "findings"
                       }
                     },

@@ -24,7 +24,7 @@ provider "grafana" {
 
 module "flowrensic" {
   source  = "flowrensic/temporal-flowrensic/aws"
-  version = "0.6.84"
+  version = "0.6.85"
 
   region            = "eu-west-1"
   vpc_id            = "vpc-REPLACE"
